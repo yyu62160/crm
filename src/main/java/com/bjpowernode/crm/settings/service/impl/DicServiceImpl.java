@@ -35,4 +35,20 @@ public class DicServiceImpl implements DicService {
 
         return map;
     }
+
+    public void setDicTypeDao(DicTypeDao dicTypeDao) {
+        this.dicTypeDao = dicTypeDao;
+    }
+
+    public DicTypeDao getDicTypeDao() {
+        return dicTypeDao;
+    }
+
+    public void setDicValueDao(DicValueDao dicValueDao) {
+        this.dicValueDao = dicValueDao;
+    }
+
+    public DicValueDao getDicValueDao() {
+        return dicValueDao;
+    }
 }
