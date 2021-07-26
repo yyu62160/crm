@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +133,7 @@ public class ActivityController {
     public List<ActivityRemark> getRemarkListByAid(String activityId){
         System.out.println("进入到获取详细信息页中备注信息的操作");
         List<ActivityRemark> activityRemarkList = service.getRemarkListByAid(activityId);
-        System.out.println(activityRemarkList);
+        //System.out.println(activityRemarkList);
         return activityRemarkList;
     }
 
