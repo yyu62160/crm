@@ -22,6 +22,14 @@ request.getContextPath() + "/";
 <script type="text/javascript">
 
 	$(function(){
+		$(".time").datetimepicker({
+			minView:"month",
+			language:'zh-CN',
+			format:'yyyy-mm-dd',
+			autoclose:true,
+			todayBtn:true,
+			pickerPosition: "top-left"
+		});
 		//为创建按钮绑定事件
 		$("#addBtn").click(function (){
 			$.ajax({
@@ -43,13 +51,49 @@ request.getContextPath() + "/";
 					$("#create-clueOwner").val(id);
 					//处理完所有者下拉框数据后，打开模态窗口
 					$("#createClueModal").modal("show");
-
-
 				}
 			})
-
 		})
-		
+		//为保存按钮绑定事件
+		$("#saveBtn").click(function (){
+			$.ajax({
+				url:"clue/save.do",
+				data:{
+					"fullname" :$.trim($("#create-surname").val()),
+					"appellation" :$.trim($("#create-call").val()),
+					"owner" :$.trim($("#create-clueOwner").val()),
+					"company" :$.trim($("#create-company").val()),
+					"job" :$.trim($("#create-job").val()),
+					"email" :$.trim($("#create-email").val()),
+					"phone" :$.trim($("#create-phone").val()),
+					"website" :$.trim($("#create-website").val()),
+					"mphone" :$.trim($("#create-mphone").val()),
+					"state" :$.trim($("#create-status").val()),
+					"source" :$.trim($("#create-source").val()),
+					"description" :$.trim($("#create-describe").val()),
+					"contactSummary" :$.trim($("#create-contactSummary").val()),
+					"nextContactTime" :$.trim($("#create-nextContactTime").val()),
+					"address" :$.trim($("#create-address").val())
+				},
+				type:"post",
+				dataType:"json",
+				success:function (data){
+					/*
+						data:
+						{"sucess":true/false}
+					 */
+					if(data.sucess){
+						//刷新列表  略过，有空可以写
+						//清空添加操作模态窗口中的数据
+						$("#createClueModal")[0].reset();
+						//关闭模态窗口
+						$("#createClueModal").modal("hide");
+					}else {
+						alert("添加线索失败")
+					}
+				}
+			})
+		})
 		
 	});
 	
@@ -169,7 +213,7 @@ request.getContextPath() + "/";
 							<div class="form-group">
 								<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control" id="create-nextContactTime">
+									<input type="text" class="form-control time" id="create-nextContactTime">
 								</div>
 							</div>
 						</div>
@@ -189,7 +233,7 @@ request.getContextPath() + "/";
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" id="saveBtn">保存</button>
 				</div>
 			</div>
 		</div>

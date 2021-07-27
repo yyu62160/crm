@@ -29,16 +29,16 @@ request.getContextPath() + "/";
 		//默认展开列表的第一页，每页展现两条记录
 		pageList(1,2);
 
+		$(".time").datetimepicker({
+			minView:"month",
+			language:'zh-CN',
+			format:'yyyy-mm-dd',
+			autoclose:true,
+			todayBtn:true,
+			pickerPosition: "bottom-left"
+		});
 		//为创建按钮绑定事件，打开添加操作的模态窗口
 		$("#addBtn").click(function (){
-			$(".time").datetimepicker({
-				minView:"month",
-				language:'zh-CN',
-				format:'yyyy-mm-dd',
-				autoclose:true,
-				todayBtn:true,
-				pickerPosition: "bottom-left"
-			});
 
 			/*
 			操作模态窗口的方式:

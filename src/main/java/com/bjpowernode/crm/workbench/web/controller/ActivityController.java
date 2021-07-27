@@ -41,7 +41,7 @@ public class ActivityController {
     public User_TandMsg saveActivity(HttpServletRequest request,Activity activity){
         System.out.println("进入到添加市场活动的操作");
         User_TandMsg user_tandMsg = new User_TandMsg();
-        //获取用户id
+        //创建id
         String id = UUIDUtil.getUUID();
         //创建时间：当前系统时间
         String createTime = DateTimeUtil.getSysTime();
