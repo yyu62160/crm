@@ -325,7 +325,7 @@ request.getContextPath() + "/";
 			dataType:"json",
 			success:function (data){
 				/*
-					data:{"total":100,"dataList":[{市场活动1}，{市场活动2}，{市场活动3}]}
+					data:{"total":数据的总量,"dataList":[{市场活动1}，{市场活动2}，{市场活动3}]}
 						我们需要的
 						[{市场活动1}，{市场活动2}，{市场活动3}]
 						一会分页插件需要的：查询出来的总记录数

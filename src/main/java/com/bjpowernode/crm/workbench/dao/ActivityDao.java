@@ -3,6 +3,7 @@ package com.bjpowernode.crm.workbench.dao;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.vo.ActivityPageListVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,4 +23,11 @@ public interface ActivityDao {
     int update(Activity activity);
 
     Activity detail(String id);
+
+    List<Activity> getActivityListByClueId(String clueId);
+
+    List<Activity> getActivityListByNameAndNotByClueId(@Param("name") String aname, @Param("clueId") String clueId);
+
+    List<Activity> getActivityListByName(String aname);
 }
+
