@@ -1,9 +1,15 @@
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 String besePath = request.getScheme() + "://" +
 request.getServerName() + ":" + request.getServerPort() +
 request.getContextPath() + "/";
+
+	Map<String,String> pMap = (Map<String, String>) application.getAttribute("pMap");
+	Set<String> set = pMap.keySet();
+
 %>
 <!DOCTYPE html>
 <html>
@@ -18,8 +24,67 @@ request.getContextPath() + "/";
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-<script type="text/javascript">
+<script type="text/javascript" src="jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
+	<script type="text/javascript">
+		var json = {
+			<%
+				for(String key: set){
+					String value = pMap.get(key);
+			%>
+				"<%=key%>":<%=value%>,
+			<%
+				}
+			%>
+		};
+
+		/*
+		对于阶段和可能性：
+			是一种一一对应的关系
+			一个阶段对应一个可能性
+			我们现在可以将阶段和可能性想象成一种键值对之间的对应关系
+			以阶段为key，通过选中的阶段，触发可能性value
+			stage             possibility
+			key				  value
+			01资质审查		  10
+			...
+			...
+
+			对于以上的数据，通过观察得到结论
+			1）数据量不是很大
+			2）这是一种键值对的对应关系
+
+			如果同时满足以上两种结论，那么我们将这样的数据保存到数据库表中就没有什么意义了
+			我们需要用到properties属性文件来进行保存
+			stageToPossibility.properties
+			01资质审查=10
+			....
+
+			stageToPossibility.properties这个文件表示的是阶段和键值对之间的对应关系
+			将来，我们通过stage，以及对应关系，来取得可能性这个值
+			这种需求在交易模块中需要大量的使用到
+
+			所以我们就需要将该文件解析在服务器缓存中
+			application.setAttribute(stageToPossibility.properties文件内容)
+		 */
+
 	$(function (){
+		$("#create-accountName").typeahead({
+			source: function (query, process) {
+				$.get(
+						"tran/getCustomerName.do",
+						{ "name" : query },
+						function (data) {
+							//alert(typeof(data));
+							/*
+							data:[{客户名称1},]
+							 */
+							process(data);
+						},
+						"json"
+				);
+			},
+			delay: 1500
+		});
 		$(".time1").datetimepicker({
 			minView:"month",
 			language:'zh-CN',
@@ -37,6 +102,34 @@ request.getContextPath() + "/";
 			todayBtn:true,
 			pickerPosition: "top-left"
 		});
+
+		//为阶段的下拉框，绑定选中下拉框的事件，根据选中的阶段填写可能性
+		$("#create-transactionStage").change(function (){
+			//取得选中的阶段
+			var stage = $("#create-transactionStage").val();
+			/*
+				目标：填写可能性
+
+				阶段有了stage
+				阶段和可能性之间的对应关系pMap，但是pMap是java语音中的键值对关系（java中的map对象）
+				我们首先的将pMap转换为js中的键值对关系json
+				我们要做的是将pMap====》{“”：“”}
+
+				以上我们已经将json处理好了
+				接下来取可能性
+			 */
+			/*
+				我们现在以json.key的形式不能取得value
+				var possibility = json.stage;   是不行的
+				因为今天的stage是一个可变的变量
+				如果是这样的key，那么我们就不能以传统的json.key的形式来取值
+				我们要使用的取值方式为
+				json[key]
+			 */
+			var possibility = json[stage];
+			//拿到可能性possibility的值，为可能性文本框赋值
+			$("#create-possibility").val(possibility);
+		})
 	})
 </script>
 </head>

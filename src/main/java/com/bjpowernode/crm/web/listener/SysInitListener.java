@@ -9,9 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SysInitListener implements ServletContextListener {
 
@@ -44,5 +42,38 @@ public class SysInitListener implements ServletContextListener {
         }
         System.out.println("服务器缓存处理数据字典结束");
 
+        //-------------------------------
+
+        //数据字典处理完毕后，处理stageToPossibility.properties文件
+        /*
+            处理stageToPossibility.properties文件步骤：
+            解析该文件，将该属性文件中的键值对关系处理成为java中键值对关系（map）
+
+            Map<String（阶段）,String（可能性）>
+
+            pMap.put(阶段,可能性)
+            ...
+
+            pMap保存值之后，放在服务器缓存中
+            application.setAttribute("pMap",pMap)
+
+         */
+        System.out.println("服务器缓存处理properties文件开始");
+        //解析properties文件
+        Map<String,String> pMap = new HashMap<>();
+        ResourceBundle rb = ResourceBundle.getBundle("/conf/Stage2Possibility");
+        Enumeration<String> e = rb.getKeys();
+
+        while (e.hasMoreElements()){
+            //阶段
+            String key = e.nextElement();
+            //可能性
+            String value = rb.getString(key);
+            //存入map
+            pMap.put(key, value);
+        }
+        //将pMap保存到服务器缓存中
+        application.setAttribute("pMap", pMap);
+        System.out.println("服务器缓存处理properties文件结束");
     }
 }
