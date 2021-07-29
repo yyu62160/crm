@@ -17,10 +17,18 @@ public class Tran {
 	private String createTime;
 	private String editBy;
 	private String editTime;
-	private String description;
+	private String description; //描述
 	private String contactSummary;	//联系纪要
 	private String nextContactTime;	//下次联系时间
-	
+
+	private String possibility; //扩充可能性，在交易详情页中使用到
+
+	public String getPossibility() {
+		return possibility;
+	}
+	public void setPossibility(String possibility) {
+		this.possibility = possibility;
+	}
 	public String getId() {
 		return id;
 	}
